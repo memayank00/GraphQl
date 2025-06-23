@@ -12,7 +12,8 @@ const movieSchema = new mongoose.Schema({
     image: String, // filename
     video: String, // filename
     imageUrl: String, // full url
-    videoUrl: String  // full url
+    videoUrl: String, // full url
+    createdBy: String // username of the creator (admin or user)
 });
 
 module.exports = mongoose.model('Movie', movieSchema);

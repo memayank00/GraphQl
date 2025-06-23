@@ -38,4 +38,27 @@ router.post(
   (req, res) => adminController.addMovie(req, res)
 );
 
+// Get all movies (for user dashboard)
+router.get('/movies', (req, res) => adminController.getAllMovies(req, res));
+
+// Admin get all movies
+router.get('/admin/movies', authenticateJWT, (req, res) => adminController.getAllMovies(req, res));
+
+// Admin get movies added by admin only
+router.get('/admin/my-movies', authenticateJWT, (req, res) => adminController.getAdminMovies(req, res));
+
+// Admin delete movie
+router.delete('/admin/movies/:id', authenticateJWT, (req, res) => adminController.deleteMovie(req, res));
+
+// Admin update movie
+router.put(
+  '/admin/movies/:id',
+  authenticateJWT,
+  upload.fields([{ name: 'image' }, { name: 'video' }]),
+  (req, res) => adminController.updateMovie(req, res)
+);
+
+// Optionally, get movies added by the logged-in user
+// router.get('/my-movies', authenticateJWT, (req, res) => adminController.getMoviesByUser(req, res));
+
 module.exports = router;
