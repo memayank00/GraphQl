@@ -57,6 +57,15 @@ class AuthController {
     me(req, res) {
         res.json({ user: req.user });
     }
+
+    async adminLogin(req, res) {
+        const { username, password } = req.body;
+        if (username === 'admin' && password === '123456') {
+            const accessToken = jwt.sign({ username: 'admin', role: 'admin' }, JWT_SECRET, { expiresIn: '1h' });
+            return res.json({ accessToken });
+        }
+        return res.status(401).json({ message: 'Invalid admin credentials' });
+    }
 }
 
 module.exports = AuthController;

@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const apiRoutes = require('./routes/restRoutes');
 const graphqlMiddleware = require('./routes/graphqlRoutes');
 require('./db'); // Initialize MongoDB connection
@@ -7,7 +8,9 @@ require('./db'); // Initialize MongoDB connection
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
     res.send('<h1>Welcome to the Node.js Express API with REST and GraphQL!</h1>');
