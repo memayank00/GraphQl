@@ -58,6 +58,13 @@ router.put(
   (req, res) => adminController.updateMovie(req, res)
 );
 
+// Admin get all users
+router.get('/admin/users', authenticateJWT, (req, res) => adminController.getAllUsers(req, res));
+
+// Admin user management
+router.delete('/admin/users/:id', authenticateJWT, (req, res) => adminController.deleteUser(req, res));
+router.put('/admin/users/:id', authenticateJWT, (req, res) => adminController.updateUser(req, res));
+
 // Optionally, get movies added by the logged-in user
 // router.get('/my-movies', authenticateJWT, (req, res) => adminController.getMoviesByUser(req, res));
 

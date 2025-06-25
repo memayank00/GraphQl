@@ -6,23 +6,35 @@ const { JWT_SECRET, JWT_REFRESH_SECRET } = require('../config/jwtConfig');
 
 class AuthController {
     async register(req, res) {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).json({ message: 'Username and password required' });
+        const { username, password, email, firstName, lastName, sex, dob } = req.body;
+        if (!username || !password || !email) {
+            return res.status(400).json({ message: 'Username, email and password required' });
         }
-        const existing = await User.findOne({ username });
-        if (existing) {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
             return res.status(409).json({ message: 'User already exists' });
         }
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
+            return res.status(409).json({ message: 'Email already exists' });
+        }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, password: hashedPassword });
+        const user = new User({
+            username,
+            password: hashedPassword,
+            email,
+            firstName,
+            lastName,
+            sex,
+            dob
+        });
         await user.save();
         res.status(201).json({ message: 'User registered successfully' });
     }
 
     async login(req, res) {
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -30,9 +42,9 @@ class AuthController {
         if (!valid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-        const accessToken = jwt.sign({ username }, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ username }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
-        await RefreshToken.create({ token: refreshToken, username });
+        const accessToken = jwt.sign({ username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign({ username: user.username, email: user.email }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        await RefreshToken.create({ token: refreshToken, username: user.username });
         res.json({ accessToken, refreshToken });
     }
 

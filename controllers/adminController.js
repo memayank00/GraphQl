@@ -1,4 +1,5 @@
 const Movie = require('../models/movie');
+const User = require('../models/user');
 const fs = require('fs');
 const path = require('path');
 
@@ -128,6 +129,49 @@ class AdminController {
             res.json({ movies });
         } catch (err) {
             res.status(500).json({ message: 'Failed to fetch movies', error: err.message });
+        }
+    }
+
+    async getAllUsers(req, res) {
+        try {
+            const user = req.user || {};
+            if (!(user && user.username === 'admin')) {
+                return res.status(403).json({ message: 'Unauthorized' });
+            }
+            const users = await User.find({}, { password: 0 });
+            res.json({ users });
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+        }
+    }
+
+    async deleteUser(req, res) {
+        try {
+            const user = req.user || {};
+            if (!(user && user.username === 'admin')) {
+                return res.status(403).json({ message: 'Unauthorized' });
+            }
+            const { id } = req.params;
+            await User.findByIdAndDelete(id);
+            res.json({ message: 'User deleted successfully' });
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to delete user', error: err.message });
+        }
+    }
+
+    async updateUser(req, res) {
+        try {
+            const user = req.user || {};
+            if (!(user && user.username === 'admin')) {
+                return res.status(403).json({ message: 'Unauthorized' });
+            }
+            const { id } = req.params;
+            const updateData = { ...req.body };
+            delete updateData.password; // Don't allow password update here
+            const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true, fields: { password: 0 } });
+            res.json({ message: 'User updated successfully', user: updatedUser });
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to update user', error: err.message });
         }
     }
 }
