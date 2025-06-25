@@ -138,7 +138,7 @@ class AdminController {
             if (!(user && user.username === 'admin')) {
                 return res.status(403).json({ message: 'Unauthorized' });
             }
-            const users = await User.find({}, { password: 0 });
+            const users = await User.find({}, { password: 0 }).sort({ createdAt: 1 });;
             res.json({ users });
         } catch (err) {
             res.status(500).json({ message: 'Failed to fetch users', error: err.message });
