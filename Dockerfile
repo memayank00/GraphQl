@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install -g npm@latest && npm install
+# just install dependencies with existing npm 10.x
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
