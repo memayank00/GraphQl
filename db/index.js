@@ -11,7 +11,8 @@ class Database {
   async _connect() {
     if (this.connection) return;
 
-    const env = process.env.NODE_ENV || "development";
+    const env = process.env.NODE_ENV || "production";
+    console.log("Environment:", env);
     let mongoUri;
 
     if (env === "production") {
