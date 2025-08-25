@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+const username = process.env.DB_USER;
+const password = encodeURIComponent(process.env.DB_PASS);
+const cluster = process.env.DB_CLUSTER;
+const dbName = process.env.DB_NAME;
 
 class Database {
     constructor() {
@@ -11,9 +15,11 @@ class Database {
         const env = process.env.NODE_ENV || 'development';
         let mongoUri;
         if (env === 'production') {
-            mongoUri = process.env.MONGO_URI_PROD || 'mongodb://localhost:27017/graphqldb_prod';
+             mongoUri = `mongodb+srv://${username}:${password}@${cluster}/${dbName}?retryWrites=true&w=majority&appName=AWSGraphQl`;
         } else {
             mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/graphqldb';
+             // mongoUri = `mongodb+srv://memayank00:${encodeURIComponent("Hughes@87654321")}@awsgraphql.igqbisn.mongodb.net/graphqldb_prod?retryWrites=true&w=majority&appName=AWSGraphQl`;
+
         }
         console.log("Mongo URI:", mongoUri);
         mongoose.connect(mongoUri)
@@ -22,7 +28,7 @@ class Database {
             this.connection = mongoose.connection;
         })
         .catch(err => {
-            console.error('Database connection error');
+            console.error('Database connection error',err);
         });
     }
 }
