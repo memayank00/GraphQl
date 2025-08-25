@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.873.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
