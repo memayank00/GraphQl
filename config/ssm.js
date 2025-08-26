@@ -14,13 +14,11 @@ async function loadDbConfig() {
   });
 
   const response = await ssm.send(command);
-  console.log("SSM Response:", response);
   const params = {};
   response.Parameters.forEach((p) => {
     const key = p.Name.split("/").pop(); // e.g., DB_USER
     params[key] = p.Value;
   });
-  console.log("Fetched DB Params:", params);
   return {
     username: params.DB_USER_PROD,
     password: encodeURIComponent(params.DB_PASS_PROD),
