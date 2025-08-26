@@ -29,8 +29,10 @@ class Database {
       // Local development: use .env or fallback
        mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/graphqldb";
     }
-
-    console.log("Mongo URI:", mongoUri);
+    function maskDbUrl(dbUrl) {
+      return dbUrl.replace(/:\/\/(.*?):(.*?)@/, '://$1:*****@');
+    }
+    console.log("Mongo URI:", maskDbUrl(mongoUri));
 
     mongoose
       .connect(mongoUri)
