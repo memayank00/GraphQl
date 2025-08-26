@@ -2,7 +2,7 @@ const { SSMClient, GetParametersCommand } = require("@aws-sdk/client-ssm");
 
 // Reusable function to fetch DB credentials from AWS SSM Parameter Store
 async function loadDbConfig() {
-  const ssm = new SSMClient({ region: "us-east-1" }); // change to your AWS region
+  const ssm = new SSMClient({ region: "ap-south-1" }); // change to your AWS region
 
   const command = new GetParametersCommand({
     Names: [
